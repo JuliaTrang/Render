@@ -12,10 +12,8 @@ private:
     vector<sf::Sprite> m_tiles;
     vector<sf::Sprite> m_toppings;
     int m_tileWidth, m_tileHeight;
-    sf::Music music;
-    Button pause(pauce, );
 public:
-    bool load(const string& tilesetPath, const string& mapPath, const string& music, int tileWidth, int tileHeight);
+    bool load(const string& tilesetPath, const string& mapPath, int tileWidth, int tileHeight);
     bool loadTopping(const string& toppingPath);
     void draw(sf::RenderWindow& window);
 };

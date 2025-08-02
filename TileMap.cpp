@@ -6,16 +6,11 @@
 #include <string>
 using namespace std;
 
-bool TileMap::load(const string& tilesetPath, const string& mapPath, const string& musicPath, int tileWidth, int tileHeight) {
+bool TileMap::load(const string& tilesetPath, const string& mapPath, int tileWidth, int tileHeight) {
     m_tileWidth = tileWidth;
     m_tileHeight = tileHeight;
 
     pauce.loadFromFile("asset/mainmenu/signalButton.png");
-
-    music.openFromFile(musicPath);
-    music.setVolume(100);
-    music.setLoop(true);
-    music.play();
 
     if (!m_tileset.loadFromFile(tilesetPath)) return false;
                                                   
