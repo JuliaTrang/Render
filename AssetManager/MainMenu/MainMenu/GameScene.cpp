@@ -7,6 +7,18 @@ GameScene::GameScene(const std::string& mapName, Difficulty diff)
     : currentMapName(mapName), game(diff, mapName) {
 
     std::cout << ">>> GameScene created with map: " << mapName << std::endl;
+    
+    std::string musicPath = getMusicPathForMap(mapName);
+    if (!bgMusic.openFromFile(musicPath)) {
+        std::cerr << "❌ Failed to load music for map: " << musicPath << std::endl;
+    }
+    else {
+        bgMusic.setLoop(true);
+        bgMusic.setVolume(100);
+        bgMusic.play();
+        std::cout << "🎵 Now playing: " << musicPath << std::endl;
+    }
+    
     UI.init();
     for (int i = 0; i < 80; ++i)
         path.emplace_back(i, 22, 0);
@@ -58,6 +70,7 @@ void GameScene::update(sf::RenderWindow& window, float deltaTime) {
 
     if (gameLost) {
         isLoseOpen = true;
+        playerMoney = 100;
         if (lose.isDone()) {
             int loseNext = lose.getNextState();
             done = true;
@@ -72,9 +85,17 @@ void GameScene::update(sf::RenderWindow& window, float deltaTime) {
     }
     else if(game.isGameFinished() && !gameLost) {
         isWinOpen = true;
+        playerMoney = 100;
         if (win.isDone()) {
+            int winNext = win.getNextState();
             done = true;
             gameLost = false; // reset
+            if (winNext == 6){ 
+                nextState = 6; // replay
+            }
+            else {
+                nextState = 0; // về menu
+            }
         }
     }
 }
@@ -108,4 +129,22 @@ Difficulty getDifficultyForMap(const std::string& map) {
     if (map == "winter") return Difficulty::Hard;
     if (map == "demon") return Difficulty::Asia;
     return Difficulty::Easy; // default fallback
+}
+
+std::string getMusicPathForMap(const std::string& map) {
+    if (map == "forest") return "asset/music/Deep-in-the-Dungeon_Forest.wav";
+    if (map == "river") return "asset/music/Super-Secret-Magic-Potions_River.wav";
+    if (map == "winter") return "asset/music/Dragon-Smasher_Winter.wav";
+    if (map == "demon") return "asset/music/Zoltraak_Demon.wav";
+    return "";
+}
+
+void GameScene::pauseMusic() {
+    if (bgMusic.getStatus() == sf::Music::Playing)
+        bgMusic.pause();
+}
+
+void GameScene::resumeMusic() {
+    if (bgMusic.getStatus() == sf::Music::Paused)
+        bgMusic.play();
 }
