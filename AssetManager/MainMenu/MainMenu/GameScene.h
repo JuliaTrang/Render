@@ -22,7 +22,7 @@ private:
     std::string currentMapName;
     bool done = false;
     int nextState = 0;
-
+    sf::Music bgMusic;
     UIManager UI;
     cPlayer player;
     cGame game;
@@ -40,7 +40,10 @@ public:
     void update(sf::RenderWindow& window, float deltaTime) override;
     void render(sf::RenderWindow& window) override;
     bool isDone() const override { return done; }
+    void pauseMusic();
+    void resumeMusic();
     int getNextState() const override { return nextState; }
 };
 
 Difficulty getDifficultyForMap(const std::string& map);
+std::string getMusicPathForMap(const std::string& map);
